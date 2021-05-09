@@ -40,13 +40,11 @@ const Auth = () => {
         try {
             if (newAccount) {
                 // Create Account
-                const data = await authService.createUserWithEmailAndPassword(email, password);
+                await authService.createUserWithEmailAndPassword(email, password);
                 setNewAccount(false);
-
             } else {
                 // Log In
-                const data = await authService.signInWithEmailAndPassword(email, password);
-                
+                await authService.signInWithEmailAndPassword(email, password);
             }
         } catch (error) {
             setError(error.message);
