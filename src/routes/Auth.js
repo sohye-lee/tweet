@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 
 const Auth = () => {
     const [email, setEmail] = useState("");
+    const [displayName, setDisplayName] = useState("");
     const [password, setPassword] = useState("");
     const [newAccount, setNewAccount] = useState(true);
     const [error, setError] = useState("");
@@ -33,6 +34,8 @@ const Auth = () => {
             setEmail(value); 
         } else if (name==='password') {
             setPassword(value);
+        } else if (name==="displayName") {
+            setDisplayName(value);
         }
     }
     const submitHandler = async (e) => {
@@ -40,7 +43,8 @@ const Auth = () => {
         try {
             if (newAccount) {
                 // Create Account
-                await authService.createUserWithEmailAndPassword(email, password);
+                await authService.createUserWithEmailAndPassword(email, password)
+                .then(userData => userData.user.updateProfile({displayName: displayName, photoURL: null}));
                 setNewAccount(false);
             } else {
                 // Log In
@@ -56,6 +60,7 @@ const Auth = () => {
         <div>
             <form onSubmit={submitHandler}>
                 <input name="email" type="text" placeholder="email" required value={email} onChange={changeHandler}/>
+                {newAccount && <input name="displayName" type="text" placeholder="your name" required value={displayName} onChange={changeHandler} />}
                 <input name="password" type="password" placeholder="password" required value={password} onChange={changeHandler}/>
                 <input type="submit" value={newAccount ? "Create Account" : "Log In"} />
                 {error !== "" && <span>{error}</span>}
